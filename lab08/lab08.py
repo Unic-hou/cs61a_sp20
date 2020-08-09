@@ -1,5 +1,6 @@
 """ Lab 08: Midterm Review """
 
+
 # Linked lists
 def insert(link, value, index):
     """Insert a value into a Link at the given index.
@@ -17,12 +18,12 @@ def insert(link, value, index):
     IndexError
     """
     if index == 0:
-        link.rest = Link(link.first,link.rest)
+        link.rest = Link(link.first, link.rest)
         link.first = value
     elif link.rest is Link.empty:
         raise IndexError
     else:
-        insert(link.rest, value, index - 1)
+        return insert(link.rest, value, index - 1)
 
 
 # Recursion/Tree Recursion
@@ -35,7 +36,8 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    return [[item] + rest for rest in nested_list]
+    return [[item] + i for i in nested_list]
+
 
 def subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
@@ -47,13 +49,12 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if not s:
-        return [[]]
-    else:
-        with_in = insert_into_all(s[0],subseqs(s[1:]))
-        with_out = subseqs(s[1:])
-        return with_in + with_out
-        
+    outcomes = [[]]
+    for num in s:
+        outcomes += [o + [num] for o in outcomes]
+    return outcomes
+
+
 def inc_subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
     of S (a list of lists) for which the elements of the subsequence
@@ -68,16 +69,19 @@ def inc_subseqs(s):
     >>> sorted(seqs2)
     [[], [1], [1], [1, 1], [1, 1, 2], [1, 2], [1, 2], [2]]
     """
+
     def subseq_helper(s, prev):
         if not s:
             return [[]]
         elif s[0] < prev:
             return subseq_helper(s[1:], prev)
         else:
-            a = subseq_helper(s[1:],s[0])
-            b = subseq_helper(s[1:],prev)
+            a = subseq_helper(s[1:], s[0])
+            b = subseq_helper(s[1:], prev)
             return insert_into_all(s[0], a) + b
-    return subseq_helper(s, 0)
+
+    return subseq_helper(s, float("-inf"))
+
 
 # Generators
 def permutations(seq):
@@ -106,10 +110,9 @@ def permutations(seq):
         yield []
     else:
         for perm in permutations(seq[1:]):
-            # 初始列表的所有排列组合可以通过取较小列表的所有排列组合，并将第一个元素插入到每个可能的位置上来找到。
-            # https://www.seas.upenn.edu/~bhusnur4/cit590_fall2013/printAllPerm.py
             for i in range(len(seq)):
-                yield perm[:i] + list(seq[0:1]) + perm[i:]
+                yield perm[i:] + list(seq)[0:1] + perm[0:i]
+
 
 # Tree class
 class Tree:
@@ -122,6 +125,7 @@ class Tree:
     >>> t.branches[1].is_leaf()
     True
     """
+
     def __init__(self, label, branches=[]):
         for b in branches:
             assert isinstance(b, Tree)
@@ -184,7 +188,9 @@ class Tree:
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
+
         return print_tree(self).rstrip()
+
 
 # Link class
 class Link:
@@ -228,11 +234,13 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
 # OOP
 class Button:
     """
     Represents a single button
     """
+
     def __init__(self, pos, key):
         """
         Creates a button
@@ -240,6 +248,7 @@ class Button:
         self.pos = pos
         self.key = key
         self.times_pressed = 0
+
 
 class Keyboard:
     """A Keyboard takes in an arbitrary amount of buttons, and has a
@@ -287,6 +296,7 @@ class Keyboard:
             ________________
         ________________
 
+
 # Nonlocal
 def make_advanced_counter_maker():
     """Makes a function that makes counters that understands the
@@ -318,14 +328,19 @@ def make_advanced_counter_maker():
     1
     """
     ________________
+
     def ____________(__________):
         ________________
+
         def ____________(__________):
             ________________
             "*** YOUR CODE HERE ***"
             # as many lines as you want
+
         ________________
+
     ________________
+
 
 # Mutable Lists
 def trade(first, second):
@@ -369,11 +384,14 @@ def trade(first, second):
         return 'Deal!'
     else:
         return 'No deal!'
+
+
 def card(n):
     """Return the playing card numeral as a string for a positive n <= 13."""
     assert type(n) == int and n > 0 and n <= 13, "Bad card n"
     specials = {1: 'A', 11: 'J', 12: 'Q', 13: 'K'}
     return specials.get(n, str(n))
+
 
 def shuffle(cards):
     """Return a shuffled list that interleaves the two halves of cards.
@@ -401,6 +419,7 @@ def shuffle(cards):
         _________________
     return shuffled
 
+
 # Recursive Objects
 def deep_len(lnk):
     """ Returns the deep length of a possibly deep linked list.
@@ -423,6 +442,7 @@ def deep_len(lnk):
     else:
         return _________________________
 
+
 def make_to_string(front, mid, back, empty_repr):
     """ Returns a function that turns linked lists to strings.
 
@@ -438,12 +458,16 @@ def make_to_string(front, mid, back, empty_repr):
     >>> jerrys_to_string(Link.empty)
     '()'
     """
+
     def printer(lnk):
         if ______________:
             return _________________________
         else:
             return _________________________
+
     return printer
+
+
 def prune_small(t, n):
     """Prune the tree mutatively, keeping only the n branches
     of each node with the smallest label.
@@ -466,6 +490,7 @@ def prune_small(t, n):
         _________________________
     for __ in _____________:
         ___________________
+
 
 # Recursion / Tree Recursion
 def num_trees(n):
@@ -504,6 +529,7 @@ class Tree:
     >>> t.branches[1].is_leaf()
     True
     """
+
     def __init__(self, label, branches=[]):
         for b in branches:
             assert isinstance(b, Tree)
@@ -566,7 +592,9 @@ class Tree:
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
+
         return print_tree(self).rstrip()
+
 
 # Link class
 class Link:
